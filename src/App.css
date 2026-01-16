@@ -1,0 +1,84 @@
+﻿.page {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 16px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    margin-bottom: 16px;
+}
+
+.letters {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.letter {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.question {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+}
+
+.answerRow {
+    display: flex;
+    gap: 8px;
+}
+
+.answerInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.answerBtn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+}
+
+.score {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.letter.active {
+    border-color: #007bff;
+    background: #eaf2ff;
+}
+.letter.correct {
+    background: #d4edda;
+    border-color: #2e7d32;
+}
+
+.letter.wrong {
+    background: #f8d7da;
+    border-color: #c62828;
+}
+
+.letter.pass {
+    background: #fff3cd;
+    border-color: #b8860b;
+}
