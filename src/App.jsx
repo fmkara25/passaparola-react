@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 const QUESTIONS = [
@@ -39,6 +39,20 @@ export default function App() {
     const [answerText, setAnswerText] = useState("");
     const [gameOver, setGameOver] = useState(false);
     const [roundPasses, setRoundPasses] = useState([]);
+    const inputRef = useRef(null);
+    const [lastScore, setLastScore] = useState(() => {
+        const saved = localStorage.getItem("passaparola:lastScore");
+        if (!saved) return null;
+
+        const obj = JSON.parse(saved);
+        if (obj.total !== QUESTIONS.length) return null; // soru sayısı değiştiyse eski skoru gösterme
+        return obj;
+    });
+
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
 
     function resetGame() {
         setLetters(
@@ -51,6 +65,7 @@ export default function App() {
         setAnswerText("");
         setRoundPasses([]);
         setGameOver(false);
+        setTimeout(() => inputRef.current?.focus(), 0);
     }
 
     const currentQ = QUESTIONS[currentIndex];
@@ -87,6 +102,7 @@ export default function App() {
         setLetters(nextLetters);
         setRoundPasses(nextPasses);
         setAnswerText("");
+        inputRef.current?.focus();
 
         const emptyIndex = nextLetters.findIndex((l) => l.status === "empty");
         if (emptyIndex !== -1) {
@@ -107,6 +123,13 @@ export default function App() {
             return;
         }
 
+        // OYUN BITIYORSA: skoru nextLetters üzerinden hesapla (en güncel hali)
+        const finalCorrect = nextLetters.filter((l) => l.status === "correct").length;
+        const finalWrong = nextLetters.filter((l) => l.status === "wrong").length;
+
+        const scoreObj = { correct: finalCorrect, wrong: finalWrong, total: QUESTIONS.length };
+        localStorage.setItem("passaparola:lastScore", JSON.stringify(scoreObj));
+        setLastScore(scoreObj);
         setGameOver(true);
     }
 
@@ -132,41 +155,49 @@ export default function App() {
                     <span>Kalan: {remainingCount}</span>
                 </div>
 
-                {gameOver && (
-                    <div style={{ marginTop: "12px" }}>
-                        <p><b>Oyun Özeti</b></p>
-                        <p>Doğru: {correctCount}</p>
-                        <p>Yanlış: {wrongCount}</p>
-                        <p>Kalan: {remainingCount}</p>
+                {lastScore && (
+                    <div style={{ marginTop: "8px", fontSize: "14px" }}>
+                        Son Skor: {lastScore.correct} doğru / {lastScore.wrong} yanlış (Toplam: {lastScore.total})
                     </div>
                 )}
 
-                <p className="question">
-                    <b>{currentQ.letter}</b> — {currentQ.question}
-                </p>
+                {!gameOver ? (
+                    <>
+                        <p className="question">
+                            <b>{currentQ.letter}</b> — {currentQ.question}
+                        </p>
 
-                <div className="answerRow">
-                    <input
-                        className="answerInput"
-                        placeholder="Cevabını yaz... (pass yazabilirsin)"
-                        value={answerText}
-                        disabled={gameOver}
-                        onChange={(e) => setAnswerText(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") handleSubmit();
-                        }}
-                    />
+                        <div className="answerRow">
+                            <input
+                                ref={inputRef}
+                                className="answerInput"
+                                placeholder="Cevabını yaz... (pass yazabilirsin)"
+                                value={answerText}
+                                onChange={(e) => setAnswerText(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleSubmit();
+                                }}
+                            />
 
-                    <button className="answerBtn" onClick={handleSubmit} disabled={gameOver}>
-                        Cevapla
-                    </button>
+                            <button className="answerBtn" onClick={handleSubmit}>
+                                Cevapla
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ marginTop: "12px" }}>
+                            <p><b>Oyun Özeti</b></p>
+                            <p>Doğru: {correctCount}</p>
+                            <p>Yanlış: {wrongCount}</p>
+                            <p>Kalan: {remainingCount}</p>
+                        </div>
 
-                    {gameOver && (
-                        <button className="answerBtn" onClick={resetGame}>
+                        <button className="answerBtn" onClick={resetGame} style={{ marginTop: "12px" }}>
                             Yeniden Başla
                         </button>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );
