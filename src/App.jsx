@@ -40,6 +40,7 @@ export default function App() {
     const [gameOver, setGameOver] = useState(false);
     const [roundPasses, setRoundPasses] = useState([]);
     const inputRef = useRef(null);
+    const [playerName, setPlayerName] = useState("");
     const [lastScore, setLastScore] = useState(() => {
         const saved = localStorage.getItem("passaparola:lastScore");
         if (!saved) return null;
@@ -135,17 +136,41 @@ export default function App() {
 
     return (
         <div className="page">
-            <h1>Passaparola</h1>
+            <div className="topbar">
+                <h1 className="title">Passaparola</h1>
+            </div>
 
-            <div className="letters">
-                {letters.map((l, index) => (
-                    <div
-                        key={l.char}
-                        className={"letter " + (index === currentIndex ? "active " : "") + l.status}
-                    >
-                        {l.char}
+            <div className="layout">
+            <div className="arena">
+                <div className="ring">
+                    {letters.map((l, index) => {
+                        const total = letters.length;
+                        const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+                        const r = 170; // çember yarıçapı
+                        const x = Math.cos(angle) * r;
+                        const y = Math.sin(angle) * r;
+
+                        return (
+                            <div
+                                key={l.char}
+                                className={"letter " + (index === currentIndex ? "active " : "") + l.status}
+                                style={{ transform: `translate(${x}px, ${y}px)` }}
+                            >
+                                {l.char}
+                            </div>
+                        );
+                    })}
+
+                    <div className="center">
+                        <div className="nameLabel">İsim</div>
+                        <input
+                            className="nameInput"
+                            placeholder="Adını yaz..."
+                            value={playerName}
+                            onChange={(e) => setPlayerName(e.target.value)}
+                        />
                     </div>
-                ))}
+                </div>
             </div>
 
             <div className="card">
@@ -153,7 +178,9 @@ export default function App() {
                     <span>Doğru: {correctCount}</span>
                     <span>Yanlış: {wrongCount}</span>
                     <span>Kalan: {remainingCount}</span>
-                </div>
+                    </div>
+            </div>
+
 
                 {lastScore && (
                     <div style={{ marginTop: "8px", fontSize: "14px" }}>

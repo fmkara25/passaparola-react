@@ -1,89 +1,220 @@
-﻿.page {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 16px;
+﻿/* === RESET & TAM EKRAN === */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* scroll olmasin */
+}
+
+/* === SAYFA === */
+.page {
+    height: 100vh;
+    width: 100vw; /* tam ekran genislik */
+    padding: 12px; /* bosluk az */
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
-}
-
-h1 {
-    margin-bottom: 16px;
-}
-
-.letters {
+    background: radial-gradient(circle at top, #1b2b6b, #0b1026);
+    color: #f2f4ff;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
+    flex-direction: column;
 }
 
+/* === ÜST BAŞLIK === */
+.topbar {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px; /* daha kisa */
+}
+
+.title {
+    margin: 0;
+    font-size: 44px;
+    letter-spacing: 1px;
+}
+
+/* === ANA LAYOUT (TAM GENISLIK) === */
+.layout {
+    flex: 1;
+    width: 100%;
+    margin: 0; /* ortalama yok */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* ekran dolsun */
+    gap: 12px;
+    align-items: center;
+}
+
+/* === ARENA === */
+.arena {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* === Boyutlar: ekrana gore otomatik (tam otursun) === */
+:root {
+    /* 360-520 arasi ring boyu, ekrana gore ayarlanir */
+    --ringSize: clamp(360px, 42vh, 520px);
+    --cardH: var(--ringSize);
+    --letterSize: clamp(34px, 4.2vh, 44px);
+}
+
+/* === ÇEMBER === */
+.ring {
+    position: relative;
+    width: var(--ringSize);
+    height: var(--ringSize);
+    border-radius: 999px;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* === HARFLER === */
 .letter {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 999px; /* tam yuvarlak */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--letterSize);
+    height: var(--letterSize);
+    margin-left: calc(var(--letterSize) / -2);
+    margin-top: calc(var(--letterSize) / -2);
+    border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    background: white;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.92);
+    color: #0b1026;
+    border: 2px solid rgba(255,255,255,0.25);
     user-select: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.card {
-    border: 1px solid #ddd;
+    .letter.active {
+        filter: drop-shadow(0 0 10px rgba(100, 180, 255, 0.9));
+        border-color: #64b4ff;
+    }
+
+    .letter.correct {
+        background: #d4edda;
+        border-color: #2e7d32;
+    }
+
+    .letter.wrong {
+        background: #f8d7da;
+        border-color: #c62828;
+    }
+
+    .letter.pass {
+        background: #fff3cd;
+        border-color: #b8860b;
+    }
+
+/* === ORTA ALAN (İSİM) === */
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(170px, 22vw, 240px);
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(6px);
+    text-align: center;
+}
+
+.nameLabel {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-bottom: 6px;
+}
+
+.nameInput {
+    width: 100%;
+    padding: 10px 12px;
     border-radius: 12px;
-    padding: 16px;
-    background: #fafafa;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.25);
+    color: #f2f4ff;
+    outline: none;
 }
 
+/* === SAĞ PANEL (SORU) === */
+.card {
+    height: var(--cardH);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    padding: 14px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* === SKOR === */
+.score {
+    display: flex;
+    gap: 16px;
+    font-weight: 700;
+}
+
+/* === SORU === */
 .question {
     font-size: 18px;
-    margin: 0 0 12px 0;
 }
 
+/* === CEVAP === */
 .answerRow {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    align-items: center;
 }
 
 .answerInput {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(0,0,0,0.22);
+    color: #f2f4ff;
+    outline: none;
 }
 
 .answerBtn {
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #f2f4ff;
     cursor: pointer;
-    background: white;
 }
 
-.score {
-    display: flex;
-    gap: 16px;
-    margin-top: 12px;
-    font-weight: bold;
-}
+    .answerBtn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
-.letter.active {
-    border-color: #007bff;
-    background: #eaf2ff;
-    transform: scale(1.05);
-}
-.letter.correct {
-    background: #d4edda;
-    border-color: #2e7d32;
-}
+/* === MOBİL (ALT ALTA) === */
+@media (max-width: 900px) {
+    html, body {
+        overflow: auto; /* mobilde scroll normal */
+    }
 
-.letter.wrong {
-    background: #f8d7da;
-    border-color: #c62828;
-}
+    .page {
+        overflow: auto;
+    }
 
-.letter.pass {
-    background: #fff3cd;
-    border-color: #b8860b;
+    .layout {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .card {
+        height: auto;
+    }
 }
