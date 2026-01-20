@@ -8,7 +8,7 @@ const QUESTIONS = [
     { letter: "D", question: "D: Bugünden bir önceki gün?", answer: "dun" },
     { letter: "E", question: "E: At ve katira benzeyen hayvan?", answer: "esek" },
     { letter: "F", question: "F: Çok güçlü rüzgar olayı?", answer: "firtina" },
-    { letter: "G", question: "G: Gökyüzünde görülen gaz topu, Güneş de bir...?", answer: "yildiz" },
+    { letter: "G", question: "G: Dunyadaki yasamin ana enerji kaynagi olan yildiz?", answer: "Gunes" },
     { letter: "H", question: "H: Yeryuzunun kagida aktarilmis hali?", answer: "harita" },
     { letter: "I", question: "I: Gözümüzün içindeki renkli kısım?", answer: "iris" },
     { letter: "J", question: "J: Besiktas ... Kulubu", answer: "jimnastik" },
