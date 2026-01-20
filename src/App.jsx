@@ -40,13 +40,15 @@ export default function App() {
     const [gameOver, setGameOver] = useState(false);
     const [roundPasses, setRoundPasses] = useState([]);
     const inputRef = useRef(null);
+    const [feedback, setFeedback] = useState(""); // "" | "correct" | "wrong" | "pass"
     const [playerName, setPlayerName] = useState("");
+    const [savedName, setSavedName] = useState("");
     const [lastScore, setLastScore] = useState(() => {
         const saved = localStorage.getItem("passaparola:lastScore");
         if (!saved) return null;
 
         const obj = JSON.parse(saved);
-        if (obj.total !== QUESTIONS.length) return null; // soru sayısı değiştiyse eski skoru gösterme
+        if (obj.total !== QUESTIONS.length) return null;
         return obj;
     });
 
@@ -86,6 +88,10 @@ export default function App() {
         let newStatus = "wrong";
         if (user === "pass") newStatus = "pass";
         else if (user === clean(currentQ.answer)) newStatus = "correct";
+
+        setFeedback(newStatus);
+        setTimeout(() => setFeedback(""), 220);
+
 
         const nextLetters = letters.map((l, i) =>
             i === currentIndex ? { ...l, status: newStatus } : l
@@ -128,7 +134,13 @@ export default function App() {
         const finalCorrect = nextLetters.filter((l) => l.status === "correct").length;
         const finalWrong = nextLetters.filter((l) => l.status === "wrong").length;
 
-        const scoreObj = { correct: finalCorrect, wrong: finalWrong, total: QUESTIONS.length };
+        const scoreObj = {
+            correct: finalCorrect,
+            wrong: finalWrong,
+            total: QUESTIONS.length,
+            name: savedName || playerName.trim() || "Anon",
+        };
+
         localStorage.setItem("passaparola:lastScore", JSON.stringify(scoreObj));
         setLastScore(scoreObj);
         setGameOver(true);
@@ -154,47 +166,68 @@ export default function App() {
                             <div
                                 key={l.char}
                                 className={"letter " + (index === currentIndex ? "active " : "") + l.status}
-                                style={{ transform: `translate(${x}px, ${y}px)` }}
+                                style={{ "--tx": `${x}px`, "--ty": `${y}px`, transform: `translate(${x}px, ${y}px)` }}
                             >
                                 {l.char}
                             </div>
                         );
                     })}
 
-                    <div className="center">
-                        <div className="nameLabel">İsim</div>
-                        <input
-                            className="nameInput"
-                            placeholder="Adını yaz..."
-                            value={playerName}
-                            onChange={(e) => setPlayerName(e.target.value)}
-                        />
-                    </div>
+                        <div className="center">
+                            <div className="nameLabel">İsim</div>
+
+                            <input
+                                className="nameInput"
+                                placeholder="Adını yaz..."
+                                value={playerName}
+                                disabled={!!savedName}
+                                onChange={(e) => setPlayerName(e.target.value)}
+                            />
+
+                            {!savedName && playerName.trim() !== "" && (
+                                <button className="nameSaveBtn" onClick={() => setSavedName(playerName.trim())}>
+                                    Kaydet
+                                </button>
+                            )}
+
+                            {savedName && (
+                                <button className="nameSaveBtn" onClick={() => setSavedName("")}>
+                                    Değiştir
+                                </button>
+                            )}
+                        </div>
                 </div>
             </div>
 
-            <div className="card">
+                <div className={"card " + (feedback ? "shake " + feedback : "")}>
+
                 <div className="score">
                     <span>Doğru: {correctCount}</span>
                     <span>Yanlış: {wrongCount}</span>
                     <span>Kalan: {remainingCount}</span>
                     </div>
+                    {feedback && (
+                        <div className={"spark " + feedback}>
+                            ✦ ✦ ✦
+                        </div>
+                    )}
             </div>
 
 
                 {lastScore && (
                     <div style={{ marginTop: "8px", fontSize: "14px" }}>
-                        Son Skor: {lastScore.correct} doğru / {lastScore.wrong} yanlış (Toplam: {lastScore.total})
+                        Son Skor ({lastScore.name}): {lastScore.correct} doğru / {lastScore.wrong} yanlış (Toplam: {lastScore.total})
                     </div>
                 )}
 
                 {!gameOver ? (
-                    <>
-                        <p className="question">
-                            <b>{currentQ.letter}</b> — {currentQ.question}
-                        </p>
+                    <div className="rightPanel">
+                        <div className="questionPanel">
+                            <div className="questionLetter">{currentQ.letter}</div>
+                            <div className="questionText">{currentQ.question}</div>
+                        </div>
 
-                        <div className="answerRow">
+                        <div className="qaStack">
                             <input
                                 ref={inputRef}
                                 className="answerInput"
@@ -206,21 +239,21 @@ export default function App() {
                                 }}
                             />
 
-                            <button className="answerBtn" onClick={handleSubmit}>
+                            <button className="answerBtn full" onClick={handleSubmit}>
                                 Cevapla
                             </button>
                         </div>
-                    </>
+                    </div>
                 ) : (
                     <>
-                        <div style={{ marginTop: "12px" }}>
+                        <div className="summary">
                             <p><b>Oyun Özeti</b></p>
                             <p>Doğru: {correctCount}</p>
                             <p>Yanlış: {wrongCount}</p>
                             <p>Kalan: {remainingCount}</p>
                         </div>
 
-                        <button className="answerBtn" onClick={resetGame} style={{ marginTop: "12px" }}>
+                        <button className="answerBtn full" onClick={resetGame}>
                             Yeniden Başla
                         </button>
                     </>

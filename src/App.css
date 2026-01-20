@@ -118,13 +118,14 @@ html, body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(170px, 22vw, 240px);
-    padding: 14px;
+    width: clamp(160px, 18vw, 200px); /* daha dar */
+    padding: 12px;
     border-radius: 18px;
     background: rgba(255,255,255,0.10);
     border: 1px solid rgba(255,255,255,0.18);
     backdrop-filter: blur(6px);
     text-align: center;
+    box-sizing: border-box;
 }
 
 .nameLabel {
@@ -135,12 +136,14 @@ html, body {
 
 .nameInput {
     width: 100%;
+    max-width: 100%;
     padding: 10px 12px;
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.25);
     background: rgba(0,0,0,0.25);
     color: #f2f4ff;
     outline: none;
+    box-sizing: border-box; /* taşmayı engeller */
 }
 
 /* === SAĞ PANEL (SORU) === */
@@ -217,4 +220,161 @@ html, body {
     .card {
         height: auto;
     }
+}
+
+/* === ANIMATIONS === */
+@keyframes pulseGlow {
+    0% {
+        filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.35));
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 14px rgba(100, 180, 255, 0.95));
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.06);
+    }
+
+    100% {
+        filter: drop-shadow(0 0 6px rgba(100, 180, 255, 0.35));
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(1);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(0.85);
+    }
+
+    70% {
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.12);
+    }
+
+    100% {
+        transform: translate(var(--tx, 0), var(--ty, 0)) scale(1);
+    }
+}
+
+/* Aktif harf nabız */
+.letter.active {
+    animation: pulseGlow 1.2s ease-in-out infinite;
+}
+
+/* Durum değişince küçük pop */
+.letter.correct,
+.letter.wrong,
+.letter.pass {
+    animation: popIn 220ms ease-out;
+}
+@keyframes cardShake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    50% {
+        transform: translateX(4px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.card.shake {
+    animation: cardShake 220ms ease-in-out;
+}
+
+.spark {
+    margin-top: 8px;
+    font-size: 16px;
+    letter-spacing: 6px;
+    opacity: 0.95;
+    user-select: none;
+}
+
+    .spark.correct {
+        color: #7CFF9B;
+    }
+
+    .spark.wrong {
+        color: #FF7C8A;
+    }
+
+    .spark.pass {
+        color: #FFD66E;
+    }
+
+.nameSaveBtn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #f2f4ff;
+    cursor: pointer;
+}
+
+/* Kart içi dikey düzen */
+.card {
+    overflow: hidden;
+}
+
+/* Soru + input + buton alt alta */
+.qaStack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Game over özeti daha kompakt */
+.summary p {
+    margin: 6px 0;
+}
+
+/* Butonu tam genişlik yap */
+.answerBtn.full {
+    width: 100%;
+}
+
+/* Card yüksekliği taşmasın diye (buton aşağı düşmesin) */
+:root {
+    --ringSize: clamp(320px, 40vh, 520px);
+    --cardH: var(--ringSize);
+}
+
+.questionPanel {
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto 12px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.16);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+    text-align: left;
+}
+
+    .questionPanel .questionLetter {
+        font-size: 16px;
+        font-weight: 800;
+        color: #9ecbff;
+        margin-bottom: 6px;
+    }
+
+    .questionPanel .questionText {
+        font-size: 18px;
+    }
+
+.rightPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
