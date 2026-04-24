@@ -1,32 +1,33 @@
-﻿# Passaparola (React)
+# Passaparola (React)
 
-Passaparola, A–Z harfleriyle oynanan klasik bilgi yarışmasının
-React ile geliştirilmiş web versiyonudur.
+Passaparola is a web-based quiz game inspired by the classic A–Z word challenge.  
+Each letter represents a question, and the player must answer correctly to complete the circle.
 
-## 🎮 Oynanış
-- Her harf için bir soru vardır
-- Cevabı yaz ve **Cevapla** butonuna bas
-- Doğru cevap → harf yeşil
-- Yanlış cevap → harf kırmızı
-- `pass` yazarsan → harf sarı, tur sonunda tekrar sorulur
-- Tüm harfler cevaplanınca oyun biter
+## 🎮 Gameplay
+- Each letter (A–Z) has a question
+- Type your answer and click **Submit**
+- Correct answer → letter turns green
+- Wrong answer → letter turns red
+- Click **Pass** to skip → letter turns yellow and will be asked again later
+- The game ends when all questions are completed
 
-## ✨ Özellikler
-- A–Z soru sistemi
-- Çember şeklinde harf yerleşimi
-- Oyuncu adı kaydetme
-- Skor takibi (doğru / yanlış)
-- Son skor LocalStorage’da saklanır
-- Masaüstü uyumlu tam ekran tasarım
+## ✨ Features
+- Full A–Z question system (26 questions)
+- Circular letter layout (game-style UI)
+- Player name input and saving
+- Score tracking (correct / wrong)
+- Last score saved using LocalStorage
+- Desktop-friendly fullscreen layout
+- Smooth UI animations and feedback effects
 
-## 🛠️ Kullanılan Teknolojiler
+## 🛠️ Technologies Used
 - React
 - Vite
 - JavaScript
 - CSS (plain)
 - LocalStorage
 
-## ▶️ Kurulum
+## ▶️ Installation
 ```bash
 npm install
 npm run dev
