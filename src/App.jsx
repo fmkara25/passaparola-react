@@ -2,47 +2,49 @@
 import "./App.css";
 
 const QUESTIONS = [
-    { letter: "A", question: "A: Türkiye'nin başkenti?", answer: "ankara" },
-    { letter: "B", question: "B: Arının yaptığı tatlı şey?", answer: "bal" },
-    { letter: "C", question: "C: Sıcak içilen, ince belli bardakta da içilen içecek?", answer: "cay" },
-    { letter: "D", question: "D: Bugünden bir önceki gün?", answer: "dun" },
-    { letter: "E", question: "E: At ve katira benzeyen hayvan?", answer: "esek" },
-    { letter: "F", question: "F: Çok güçlü rüzgar olayı?", answer: "firtina" },
-    { letter: "G", question: "G: Dunyadaki yasamin ana enerji kaynagi olan yildiz?", answer: "Gunes" },
-    { letter: "H", question: "H: Yeryuzunun kagida aktarilmis hali?", answer: "harita" },
-    { letter: "I", question: "I: Gözümüzün içindeki renkli kısım?", answer: "iris" },
-    { letter: "J", question: "J: Besiktas ... Kulubu", answer: "jimnastik" },
-    { letter: "K", question: "K: Besiktasin sembolu olan hayvan?", answer: "kartal" },
-    { letter: "L", question: "L: Sari renkli eksi bir meyve?", answer: "limon" },
-    { letter: "M", question: "M: Ingilizcede banana?", answer: "muz" },
-    { letter: "N", question: "N: Atin ayagina cakilan sey", answer: "nal" },
-    { letter: "O", question: "O: Okulda ders anlatan kişi?", answer: "ogretmen" },
-    { letter: "P", question: "P: Futbolda rakibe dogru yapilan baski?", answer: "press" },
-    { letter: "R", question: "R: Uykuda gorulen gercekci durum?", answer: "ruya" },
-    { letter: "S", question: "S: 55 plakali sehrimiz hangisidir?", answer: "samsun" },
-    { letter: "T", question: "T: 61 plakali sehrimiz hangisidir?", answer: "trabzon" },
-    { letter: "U", question: "U: Kirmizi siyah renkli kucuk bir bocek turu", answer: "ugurbocegi" },
-    { letter: "V", question: "V: Bir gezegen?", answer: "venus" },
-    { letter: "Y", question: "Y: Haziran, temmuz agustos hangi mevsimdir", answer: "yaz" },
-    { letter: "Z", question: "Z: Hayvanat bahçesinde görülen uzun boyunlu hayvan?", answer: "zurafa" },
+    { letter: "A", question: "A: What fruit is red or green and grows on trees?", answer: "apple" },
+    { letter: "B", question: "B: What yellow fruit do monkeys like?", answer: "banana" },
+    { letter: "C", question: "C: What animal says meow?", answer: "cat" },
+    { letter: "D", question: "D: What animal says woof?", answer: "dog" },
+    { letter: "E", question: "E: What do we call online mail?", answer: "email" },
+    { letter: "F", question: "F: What animal swims and has fins?", answer: "fish" },
+    { letter: "G", question: "G: What color is grass?", answer: "green" },
+    { letter: "H", question: "H: What do you wear on your head?", answer: "hat" },
+    { letter: "I", question: "I: What sweet frozen dessert is cold?", answer: "ice cream" },
+    { letter: "J", question: "J: What is a sweet spread made from fruit?", answer: "jam" },
+    { letter: "K", question: "K: What opens a locked door?", answer: "key" },
+    { letter: "L", question: "L: What animal is called the king of the jungle?", answer: "lion" },
+    { letter: "M", question: "M: What is Earth's natural satellite?", answer: "moon" },
+    { letter: "N", question: "N: What comes after day?", answer: "night" },
+    { letter: "O", question: "O: What fruit is round and orange?", answer: "orange" },
+    { letter: "P", question: "P: What do you write with?", answer: "pen" },
+    { letter: "Q", question: "Q: What word means a short test?", answer: "quiz" },
+    { letter: "R", question: "R: What falls from clouds?", answer: "rain" },
+    { letter: "S", question: "S: What shines in the sky during the day?", answer: "sun" },
+    { letter: "T", question: "T: What hot drink is made with leaves?", answer: "tea" },
+    { letter: "U", question: "U: What do you use when it rains?", answer: "umbrella" },
+    { letter: "V", question: "V: What planet starts with V?", answer: "venus" },
+    { letter: "W", question: "W: What do you drink when you are thirsty?", answer: "water" },
+    { letter: "X", question: "X: What instrument starts with X?", answer: "xylophone" },
+    { letter: "Y", question: "Y: What color is a banana?", answer: "yellow" },
+    { letter: "Z", question: "Z: What animal has black and white stripes?", answer: "zebra" },
 ];
 
 export default function App() {
     const [letters, setLetters] = useState(
-        QUESTIONS.map((q) => ({
-            char: q.letter,
-            status: "empty", // empty | correct | wrong | pass
-        }))
+        QUESTIONS.map((q) => ({ char: q.letter, status: "empty" }))
     );
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answerText, setAnswerText] = useState("");
     const [gameOver, setGameOver] = useState(false);
     const [roundPasses, setRoundPasses] = useState([]);
-    const inputRef = useRef(null);
-    const [feedback, setFeedback] = useState(""); // "" | "correct" | "wrong" | "pass"
+    const [feedback, setFeedback] = useState("");
     const [playerName, setPlayerName] = useState("");
     const [savedName, setSavedName] = useState("");
+
+    const inputRef = useRef(null);
+
     const [lastScore, setLastScore] = useState(() => {
         const saved = localStorage.getItem("passaparola:lastScore");
         if (!saved) return null;
@@ -52,24 +54,9 @@ export default function App() {
         return obj;
     });
 
-
     useEffect(() => {
         inputRef.current?.focus();
     }, []);
-
-    function resetGame() {
-        setLetters(
-            QUESTIONS.map((q) => ({
-                char: q.letter,
-                status: "empty",
-            }))
-        );
-        setCurrentIndex(0);
-        setAnswerText("");
-        setRoundPasses([]);
-        setGameOver(false);
-        setTimeout(() => inputRef.current?.focus(), 0);
-    }
 
     const currentQ = QUESTIONS[currentIndex];
 
@@ -79,6 +66,16 @@ export default function App() {
 
     function clean(text) {
         return text.trim().toLowerCase();
+    }
+
+    function resetGame() {
+        setLetters(QUESTIONS.map((q) => ({ char: q.letter, status: "empty" })));
+        setCurrentIndex(0);
+        setAnswerText("");
+        setRoundPasses([]);
+        setGameOver(false);
+        setFeedback("");
+        setTimeout(() => inputRef.current?.focus(), 0);
     }
 
     function handleSubmit() {
@@ -92,18 +89,18 @@ export default function App() {
         setFeedback(newStatus);
         setTimeout(() => setFeedback(""), 220);
 
-
         const nextLetters = letters.map((l, i) =>
             i === currentIndex ? { ...l, status: newStatus } : l
         );
 
         let nextPasses = roundPasses;
+
         if (newStatus === "pass") {
-            if (!nextPasses.includes(currentIndex)) nextPasses = [...nextPasses, currentIndex];
-        } else {
-            if (nextPasses.includes(currentIndex)) {
-                nextPasses = nextPasses.filter((x) => x !== currentIndex);
+            if (!nextPasses.includes(currentIndex)) {
+                nextPasses = [...nextPasses, currentIndex];
             }
+        } else {
+            nextPasses = nextPasses.filter((x) => x !== currentIndex);
         }
 
         setLetters(nextLetters);
@@ -112,6 +109,7 @@ export default function App() {
         inputRef.current?.focus();
 
         const emptyIndex = nextLetters.findIndex((l) => l.status === "empty");
+
         if (emptyIndex !== -1) {
             setCurrentIndex(emptyIndex);
             return;
@@ -130,7 +128,6 @@ export default function App() {
             return;
         }
 
-        // OYUN BITIYORSA: skoru nextLetters üzerinden hesapla (en güncel hali)
         const finalCorrect = nextLetters.filter((l) => l.status === "correct").length;
         const finalWrong = nextLetters.filter((l) => l.status === "wrong").length;
 
@@ -138,7 +135,7 @@ export default function App() {
             correct: finalCorrect,
             wrong: finalWrong,
             total: QUESTIONS.length,
-            name: savedName || playerName.trim() || "Anon",
+            name: savedName || playerName.trim() || "Anonymous",
         };
 
         localStorage.setItem("passaparola:lastScore", JSON.stringify(scoreObj));
@@ -153,111 +150,118 @@ export default function App() {
             </div>
 
             <div className="layout">
-            <div className="arena">
-                <div className="ring">
-                    {letters.map((l, index) => {
-                        const total = letters.length;
-                        const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
-                        const r = 170; // çember yarıçapı
-                        const x = Math.cos(angle) * r;
-                        const y = Math.sin(angle) * r;
+                <div className="arena">
+                    <div className="ring">
+                        {letters.map((l, index) => {
+                            const total = letters.length;
+                            const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+                            const r = 170;
+                            const x = Math.cos(angle) * r;
+                            const y = Math.sin(angle) * r;
 
-                        return (
-                            <div
-                                key={l.char}
-                                className={"letter " + (index === currentIndex ? "active " : "") + l.status}
-                                style={{ "--tx": `${x}px`, "--ty": `${y}px`, transform: `translate(${x}px, ${y}px)` }}
-                            >
-                                {l.char}
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div
+                                    key={l.char}
+                                    className={
+                                        "letter " +
+                                        (index === currentIndex ? "active " : "") +
+                                        l.status
+                                    }
+                                    style={{
+                                        "--tx": `${x}px`,
+                                        "--ty": `${y}px`,
+                                        transform: `translate(${x}px, ${y}px)`,
+                                    }}
+                                >
+                                    {l.char}
+                                </div>
+                            );
+                        })}
 
                         <div className="center">
-                            <div className="nameLabel">İsim</div>
+                            <div className="nameLabel">Name</div>
 
                             <input
                                 className="nameInput"
-                                placeholder="Adını yaz..."
+                                placeholder="Enter your name..."
                                 value={playerName}
                                 disabled={!!savedName}
                                 onChange={(e) => setPlayerName(e.target.value)}
                             />
 
                             {!savedName && playerName.trim() !== "" && (
-                                <button className="nameSaveBtn" onClick={() => setSavedName(playerName.trim())}>
-                                    Kaydet
+                                <button
+                                    className="nameSaveBtn"
+                                    onClick={() => setSavedName(playerName.trim())}
+                                >
+                                    Save
                                 </button>
                             )}
 
                             {savedName && (
                                 <button className="nameSaveBtn" onClick={() => setSavedName("")}>
-                                    Değiştir
+                                    Change
                                 </button>
                             )}
                         </div>
+                    </div>
                 </div>
-            </div>
 
                 <div className={"card " + (feedback ? "shake " + feedback : "")}>
-
-                <div className="score">
-                    <span>Doğru: {correctCount}</span>
-                    <span>Yanlış: {wrongCount}</span>
-                    <span>Kalan: {remainingCount}</span>
+                    <div className="score">
+                        <span>Correct: {correctCount}</span>
+                        <span>Wrong: {wrongCount}</span>
+                        <span>Remaining: {remainingCount}</span>
                     </div>
-                    {feedback && (
-                        <div className={"spark " + feedback}>
-                            ✦ ✦ ✦
+
+                    {feedback && <div className={"spark " + feedback}>✦ ✦ ✦</div>}
+
+                    {lastScore && (
+                        <div className="lastScore">
+                            Last Score ({lastScore.name}): {lastScore.correct} correct /{" "}
+                            {lastScore.wrong} wrong (Total: {lastScore.total})
                         </div>
                     )}
-            </div>
 
+                    {!gameOver ? (
+                        <div className="rightPanel">
+                            <div className="questionPanel">
+                                <div className="questionLetter">{currentQ.letter}</div>
+                                <div className="questionText">{currentQ.question}</div>
+                            </div>
 
-                {lastScore && (
-                    <div style={{ marginTop: "8px", fontSize: "14px" }}>
-                        Son Skor ({lastScore.name}): {lastScore.correct} doğru / {lastScore.wrong} yanlış (Toplam: {lastScore.total})
-                    </div>
-                )}
+                            <div className="qaStack">
+                                <input
+                                    ref={inputRef}
+                                    className="answerInput"
+                                    placeholder="Type your answer... (or type pass)"
+                                    value={answerText}
+                                    onChange={(e) => setAnswerText(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") handleSubmit();
+                                    }}
+                                />
 
-                {!gameOver ? (
-                    <div className="rightPanel">
-                        <div className="questionPanel">
-                            <div className="questionLetter">{currentQ.letter}</div>
-                            <div className="questionText">{currentQ.question}</div>
+                                <button className="answerBtn full" onClick={handleSubmit}>
+                                    Submit
+                                </button>
+                            </div>
                         </div>
+                    ) : (
+                        <div className="summary">
+                            <p>
+                                <b>Game Summary</b>
+                            </p>
+                            <p>Correct: {correctCount}</p>
+                            <p>Wrong: {wrongCount}</p>
+                            <p>Remaining: {remainingCount}</p>
 
-                        <div className="qaStack">
-                            <input
-                                ref={inputRef}
-                                className="answerInput"
-                                placeholder="Cevabını yaz... (pass yazabilirsin)"
-                                value={answerText}
-                                onChange={(e) => setAnswerText(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") handleSubmit();
-                                }}
-                            />
-
-                            <button className="answerBtn full" onClick={handleSubmit}>
-                                Cevapla
+                            <button className="answerBtn full" onClick={resetGame}>
+                                Restart Game
                             </button>
                         </div>
-                    </div>
-                ) : (
-                    <>
-                        <div className="summary">
-                            <p><b>Oyun Özeti</b></p>
-                            <p>Doğru: {correctCount}</p>
-                            <p>Yanlış: {wrongCount}</p>
-                            <p>Kalan: {remainingCount}</p>
-                        </div>
-
-                        <button className="answerBtn full" onClick={resetGame}>
-                            Yeniden Başla
-                        </button>
-                    </>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
